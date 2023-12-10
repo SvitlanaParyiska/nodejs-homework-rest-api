@@ -1,13 +1,13 @@
-const { BadRequest } = require("http-errors");
+const { HttpError } = require("../helpers");
 
 const validateBody = (schema) => {
   const func = (req, res, next) => {
     if (Object.keys(req.body).length < 1) {
-      throw new BadRequest("missing fields");
+      next(HttpError(400, "missing fields"));
     }
     const { error } = schema.validate(req.body);
     if (error) {
-      throw new BadRequest(error.message);
+      next(HttpError(400, error.message));
     }
     next();
   };
